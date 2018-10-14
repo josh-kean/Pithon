@@ -29,21 +29,6 @@ def score(count):
     text = font.render("Score: " +str(count), True, black)
     gameDisplay.blit(text, [display_width/2,25])
     
-# ~ def message_display(text):
-    # ~ largeText = pygame.font.Font('freesansbold.ttf',115)
-    # ~ TextSurf, TextRect = text_objects(text, largeText)
-    # ~ TextRect.center = (display_width/2, display_height/2)
-    # ~ gameDisplay.blit(TextSurf, TextRect)
-
-    # ~ pygame.display.update()
-
-    # ~ time.sleep(2)
-    # ~ game_loop()
-    
-# ~ def crash():
-    # ~ message_display("You Crashed")  
-
-
 def pithon():
 #sets image width
     number_width = 50
@@ -51,14 +36,15 @@ def pithon():
     image_x, image_y = display_width/2, display_height/2
     pi_string = ["images/three.png","images/one.png","images/four.png"]
     snake_position = [[image_x, image_y], [image_x, image_y], [image_x+number_width, image_y]]
-#    x_position = [image_x, image_x, image_x+number_width]
-#    y_position = [image_y, image_y, image_y]
     x_change, y_change = -50, 0
 #determines starting position in array to pull from letters
     count = 2
-
+    randCount = random.randrange(1,9)
+    while randCount == count:
+        randCount = random.randrange(1,9)
 #determines starting food position
     food_x, food_y = random.randrange(number_width,display_width-number_width,number_width), random.randrange(number_width,display_height-number_width,number_width)
+    rfood_x, rfood_y = random.randrange(number_width,display_width-number_width,number_width), random.randrange(number_width,display_height-number_width,number_width)
     crashed = False
 
 
@@ -78,11 +64,12 @@ def pithon():
 #creates next snake body part on screen
         food = numSelect()
         numDisplay(pygame.image.load(food.piDigit(count+1)), food_x, food_y)
-
+        
+#creates fake snake body part on screen
+        snakefood = numSelect()
+        numDisplay(pygame.image.load(snakefood.piDigit(randCount)), rfood_x, rfood_y)
 
 #generates snake body
-        # ~ for x in range(1,len(pi_string)):
-            # ~ numDisplay(pygame.image.load(pi_string[x]), snake_position[x][0], snake_position[x][1])
         [numDisplay(pygame.image.load(pi_string[x]), snake_position[x][0], snake_position[x][1]) for x in range(1,len(pi_string))]       
 
 #creates user controls
@@ -107,24 +94,28 @@ def pithon():
         snake_position[0][1] += y_change
 
 #for loop to shift everything up one
+
         for x in reversed(range(1,len(pi_string))):
             snake_position[x][0] = snake_position[x-1][0]
             snake_position[x][1] = snake_position[x-1][1]
             
-        # ~ snake_position  = [snake_position[a-1] for a in reversed(range(1,len(pi_string)))]
 #if statement to detect food collision
         if food_x == snake_position[0][0] and food_y == snake_position[0][1]:
             count +=1
+            randCount = random.randrange(1,9)
             food_x, food_y = -100, -100
             pi_string.append(food.piDigit(count))
             snake_position.append([food_x,food_y])
 #            y_position.append(food_y)
             food_x = random.randrange(number_width*2,display_width-number_width*2,number_width)
             food_y = random.randrange(number_width*2,display_height-number_width*2,number_width)
+            rfood_x, rfood_y = random.randrange(number_width,display_width-number_width,number_width), random.randrange(number_width,display_height-number_width,number_width)            
             while [food_x,food_y] in snake_position:
                 food_x = random.randrange(number_width*2,display_width-number_width*2, number_width)
                 food_y = random.randrange(number_width*2,display_height-number_width*2, number_width)
-
+                rfood_x, rfood_y = random.randrange(number_width,display_width-number_width,number_width), random.randrange(number_width,display_height-number_width,number_width)
+            while randCount == count:
+                randCount = random.randrange(1,9)
 
 
 #draws snake head
@@ -137,13 +128,9 @@ def pithon():
             
         if snake_position[0] in snake_position[2:]:
             crashed = True
-            
-         
- 
 
-#displayes snake on screen
-        #numDisplay(pygame.image.load(pi_string[0]), x_position[0], y_position[0])
-   
+        if snake_position[0] in [rfood_x, rfood_y]:
+            crashed = True
 
 #these two statements need to be at the end of the pithon definition
 
