@@ -1,3 +1,4 @@
-simple read me file
-i updated it by adding this line!!
-haha i updated i meowzer
+This is a remake of the arcade game Pi.
+Start it by going to the directory in the terminal and typing "python3 pithon.py"
+You need to have pygame installed on your machine for this to return
+use arrow keys to guide snake
